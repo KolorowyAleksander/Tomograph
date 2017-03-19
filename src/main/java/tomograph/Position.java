@@ -34,8 +34,8 @@ public class Position {
                 x = r * Math.cos(Math.toRadians(alpha+90) + Math.PI + (Math.toRadians(phi) / 2));
                 y = r * Math.sin(Math.toRadians(alpha+90) + Math.PI + (Math.toRadians(phi) / 2));
             }
-            position.x = x;
-            position.y = y;
+            position.x = x+200; //+200 bo javafx
+            position.y = y+200; //+200 bo javafx
             detectorsposition[i] =  position;
         }
 

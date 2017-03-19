@@ -15,6 +15,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 import static oracle.jrockit.jfr.events.Bits.intValue;
 
 public class Main extends Application {
@@ -40,8 +42,19 @@ public class Main extends Application {
         canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(position.x), intValue(position.y), Color.RED);
         //rysowanie detektorow
         for(int i = 0; i < n; i++) {
-            canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(detectorspositon[i].x)+200, intValue(detectorspositon[i].y)+200, Color.BLACK);
+            canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(detectorspositon[i].x),
+                                                                    intValue(detectorspositon[i].y),
+                                                                    Color.BLACK);
+            //rysowanie linii
+            ArrayList<Point> line = new Lines().arrayLine(position, detectorspositon[i]);
+            for(Point point: line) {
+                System.out.println(point.x + " :x; " + point.y + " :y ");
+                canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(point.x),
+                                                                        intValue(point.y),
+                                                                        Color.BLACK);
+            }
         }
+
 
 
         StackPane root = new StackPane();
