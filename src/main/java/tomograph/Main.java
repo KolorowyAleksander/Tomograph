@@ -32,7 +32,9 @@ public class Main extends Application {
         double phi = 90;
         int r = 200;
         int n = 80;
-        Point position = new Position().emiterPosition(alpha, r);
+        
+        Point position = Position.emiterPosition(alpha, r);
+
         Point[] detectorspositon = new Position().detectorPosition(alpha, phi, r, n);
 
         Canvas canvas = new Canvas(400,400);
