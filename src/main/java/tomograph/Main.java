@@ -28,7 +28,7 @@ public class Main extends Application {
         Slider slider = new Slider(0, 100, 40);
         Label label = new Label("Label:");
         Label sliderValue = new Label(Double.toString(slider.getValue()));
-        double alpha = 0;
+        double alpha = 250;
         double phi = 270;
         int r = 200;
         int n = 80;

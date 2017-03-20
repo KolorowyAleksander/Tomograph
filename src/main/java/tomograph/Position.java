@@ -6,6 +6,7 @@ import static java.lang.Math.*;
 public class Position {
 
     public static Point emiterPosition(double alpha, double r){
+        alpha += 90;
         double x = r * cos(toRadians(alpha));
         double y = r * sin(toRadians(alpha));
 
