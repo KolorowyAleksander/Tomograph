@@ -5,14 +5,11 @@ import static java.lang.Math.*;
 
 public class Position {
 
-    public static Point emiterPosition(double alpha, float r){
-        double x, y;
-        x = r * cos(toRadians(alpha));
-        y = r * sin(toRadians(alpha));
+    public static Point emiterPosition(double alpha, double r){
+        double x = r * cos(toRadians(alpha));
+        double y = r * sin(toRadians(alpha));
 
-        Point position = new Point(x, y);
-
-        return position;
+        return new Point(x + r, y + r);
     }
 
     public Point[] detectorPosition(double alpha, double phi, int r, int n){

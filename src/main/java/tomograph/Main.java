@@ -32,13 +32,13 @@ public class Main extends Application {
         double phi = 90;
         int r = 200;
         int n = 80;
-        
-        Point position = Position.emiterPosition(alpha, r);
 
+
+        Point position = Position.emiterPosition(alpha, r);
         Point[] detectorspositon = new Position().detectorPosition(alpha, phi, r, n);
 
         Canvas canvas = new Canvas(400,400);
-        canvas.getGraphicsContext2D().setFill(Color.RED);
+
         canvas.getGraphicsContext2D().getPixelWriter().setColor(200,200,Color.GREEN);
         //rysowanie emitera
         canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(position.x), intValue(position.y), Color.RED);
