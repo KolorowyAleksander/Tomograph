@@ -1,11 +1,14 @@
 package tomograph;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.*;
 
 public class Position {
 
-    public static Point emiterPosition(double alpha, double r){
+    public static Point findEmmitersPositions(double alpha, double r){
         alpha += 90;
         double x = r * cos(toRadians(alpha));
         double y = r * sin(toRadians(alpha));
@@ -13,9 +16,9 @@ public class Position {
         return new Point(x + r, y + r);
     }
 
-    public Point[] detectorPosition(double alpha, double phi, int r, int n){
+    public static List<Point> findDetectorsPositions(double alpha, double phi, int r, int n){
         double x = 0, y = 0;
-        Point detectorsposition[] = new Point[n];
+        List<Point> detectorsPositions = new ArrayList<Point>();
         for(int i = 0; i < n; i++){
             Point position = new Point(x, y);
             if (i == 0) {
@@ -30,9 +33,9 @@ public class Position {
             }
             position.x = x+200; //+200 bo javafx
             position.y = y+200; //+200 bo javafx
-            detectorsposition[i] =  position;
+            detectorsPositions.add(position);
         }
 
-        return detectorsposition;
+        return detectorsPositions;
     }
 }

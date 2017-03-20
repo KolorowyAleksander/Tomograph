@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static oracle.jrockit.jfr.events.Bits.intValue;
 
@@ -34,29 +35,34 @@ public class Main extends Application {
         int n = 80;
 
 
-        Point position = Position.emiterPosition(alpha, r);
-        Point[] detectorspositon = new Position().detectorPosition(alpha, phi, r, n);
+        Point position = Position.findEmmitersPositions(alpha, r);
+        List<Point> detectorspositon = Position.findDetectorsPositions(alpha, phi, r, n);
 
-        Canvas canvas = new Canvas(400,400);
+        Canvas canvas = new Canvas(2 * r, 2 * r);
 
-        canvas.getGraphicsContext2D().getPixelWriter().setColor(200,200,Color.GREEN);
-        //rysowanie emitera
-        canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(position.x), intValue(position.y), Color.RED);
-        //rysowanie detektorow
-        for(int i = 0; i < n; i++) {
-            canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(detectorspositon[i].x),
-                                                                    intValue(detectorspositon[i].y),
-                                                                    Color.BLACK);
-            //rysowanie linii
-            ArrayList<Point> line = new Lines().arrayLine(position, detectorspositon[i]);
-            for(Point point: line) {
+        //drawing middle
+        canvas.getGraphicsContext2D().getPixelWriter().setColor(200, 200, Color.GREEN);
+
+        //drawing emmiter
+        canvas.getGraphicsContext2D()
+                .getPixelWriter()
+                .setColor((int) position.x, (int) position.y, Color.RED);
+
+        //drawing detectors
+        for (Point detector : detectorspositon) {
+            canvas.getGraphicsContext2D()
+                    .getPixelWriter()
+                    .setColor((int) detector.x, (int) detector.y, Color.BLACK);
+
+            //drawing lines from detectors
+            ArrayList<Point> line = new Lines().arrayLine(position, detector);
+            for (Point point : line) {
                 System.out.println(point.x + " :x; " + point.y + " :y ");
-                canvas.getGraphicsContext2D().getPixelWriter().setColor(intValue(point.x),
-                                                                        intValue(point.y),
-                                                                        Color.BLACK);
+                canvas.getGraphicsContext2D()
+                        .getPixelWriter()
+                        .setColor((int) point.x, (int) point.y, Color.BLACK);
             }
         }
-
 
 
         StackPane root = new StackPane();
