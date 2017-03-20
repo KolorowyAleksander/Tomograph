@@ -28,8 +28,8 @@ public class Main extends Application {
         Slider slider = new Slider(0, 100, 40);
         Label label = new Label("Label:");
         Label sliderValue = new Label(Double.toString(slider.getValue()));
-        double alpha = 90;
-        double phi = 90;
+        double alpha = 0;
+        double phi = 270;
         int r = 200;
         int n = 80;
         Point position = new Position().emiterPosition(alpha, r);
