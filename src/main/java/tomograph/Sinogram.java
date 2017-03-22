@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Sinogram {
     public static void averagePoints(Image image, Canvas sinogram, double alpha, double phi, int n, double deltaAlpha){
-        double numberOfSteps = 360/deltaAlpha;
+        int numberOfSteps = (int)(360/deltaAlpha);
         for(int i = 0; i < numberOfSteps; i++){
             Point emiter = Position.findEmmiterPosition(alpha+i*deltaAlpha, (int)image.getHeight()/2);
             List<Point> detectors = Position.findDetectorsPositions(alpha+i*deltaAlpha, phi, (int)image.getHeight()/2, n);
