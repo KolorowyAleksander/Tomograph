@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static oracle.jrockit.jfr.events.Bits.intValue;
 
 public class Main extends Application {
 
@@ -30,15 +29,18 @@ public class Main extends Application {
         Label label = new Label("Label:");
         Label sliderValue = new Label(Double.toString(slider.getValue()));
         double alpha = 250;
-        double phi = 270;
+        double phi = 90;
         int r = 200;
-        int n = 80;
+        int n = 180;
+        double deltaAlpha = 1;
+        double numberOfSteps = 360/deltaAlpha;
 
 
-        Point position = Position.findEmmitersPositions(alpha, r);
+        Point position = Position.findEmmiterPosition(alpha, r);
         List<Point> detectorspositon = Position.findDetectorsPositions(alpha, phi, r, n);
 
         Canvas canvas = new Canvas(2 * r, 2 * r);
+        Canvas sinogram = new Canvas(n, numberOfSteps);
 
         //drawing middle
         canvas.getGraphicsContext2D().getPixelWriter().setColor(200, 200, Color.GREEN);
@@ -55,7 +57,7 @@ public class Main extends Application {
                     .setColor((int) detector.x, (int) detector.y, Color.BLACK);
 
             //drawing lines from detectors
-            ArrayList<Point> line = new Lines().arrayLine(position, detector);
+            ArrayList<Point> line = Lines.arrayLine(position, detector);
             for (Point point : line) {
                 System.out.println(point.x + " :x; " + point.y + " :y ");
                 canvas.getGraphicsContext2D()
@@ -64,10 +66,12 @@ public class Main extends Application {
             }
         }
 
+        Sinogram.averagePoints(image, sinogram, alpha, phi, n, deltaAlpha);
+
 
         StackPane root = new StackPane();
 
-        Scene scene = new Scene(root, 850, 500);
+        Scene scene = new Scene(root, 1250, 500);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Slider Sample");
 
@@ -81,9 +85,11 @@ public class Main extends Application {
         sample.setFitWidth(400);
         GridPane.setConstraints(sample, 0, 0);
         GridPane.setConstraints(canvas, 3, 0);
+        GridPane.setConstraints(sinogram, 6, 0);
         GridPane.setColumnSpan(sample, 3);
         grid.getChildren().add(sample);
         grid.getChildren().add(canvas);
+        grid.getChildren().add(sinogram);
         scene.setRoot(grid);
 
         label.setTextFill(Color.BLACK);

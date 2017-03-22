@@ -1,6 +1,8 @@
 package tomograph;
 
 
+import javafx.scene.image.Image;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,19 +10,19 @@ import static java.lang.Math.*;
 
 public class Position {
 
-    public static Point findEmmitersPositions(double alpha, double r) {
+    public static Point findEmmiterPosition(double alpha, int r) {
         alpha += 90;
         double x = r * cos(toRadians(alpha));
         double y = r * sin(toRadians(alpha));
 
-        return new Point(x + r, y + r);
+        return new Point(positionCheck((int)(x+r), 2*r),
+                         positionCheck((int)(y+r), 2*r));
     }
 
     public static List<Point> findDetectorsPositions(double alpha, double phi, int r, int n) {
-        double x = 0, y = 0;
         List<Point> detectorsPositions = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            Point position = new Point(x, y);
+            double x, y;
             if (i == 0) {
                 x = r * cos(toRadians(alpha + 90) + PI - (toRadians(phi) / 2));
                 y = r * sin(toRadians(alpha + 90) + PI - (toRadians(phi) / 2));
@@ -31,11 +33,23 @@ public class Position {
                 x = r * cos(toRadians(alpha + 90) + PI + (toRadians(phi) / 2));
                 y = r * sin(toRadians(alpha + 90) + PI + (toRadians(phi) / 2));
             }
-            position.x = x + r; //+r because we're in 1st quarter
-            position.y = y + r; //+r because we're in 1st quarter
-            detectorsPositions.add(position);
+
+            detectorsPositions.add(new Point(positionCheck((int)(x+r), 2*r),
+                                             positionCheck((int)(y+r), 2*r)));
         }
 
         return detectorsPositions;
     }
+
+    private static int positionCheck(int x, int height){
+        if(x < 0){
+            return 0;
+        } else if( x > height-1) {
+            return height-1;
+        } else {
+            return x;
+        }
+    }
 }
+
+

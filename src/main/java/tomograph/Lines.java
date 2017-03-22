@@ -8,7 +8,7 @@ import static oracle.jrockit.jfr.events.Bits.intValue;
 
 public class Lines {
 
-    public ArrayList<Point> arrayLine(Point a, Point b){
+    public static ArrayList<Point> arrayLine(Point a, Point b){
         ArrayList<Point> result = new ArrayList<Point>();
         int octant = octant2(a, b);
         a = switchToOctantZeroFrom(octant, a.x, a.y );
@@ -34,7 +34,7 @@ public class Lines {
         return result;
     }
 
-    public static int octant(double dx, double dy)
+    private static int octant(double dx, double dy)
     {
         if (dx == 0.0 && dy == 0.0)
             throw new IllegalArgumentException("Cannot compute the octant for point ( "+ dx + ", " + dy + " )" );
@@ -72,7 +72,7 @@ public class Lines {
         }
     }
 
-    public static int octant2(Point p0, Point p1)    {
+    private static int octant2(Point p0, Point p1)    {
         double dx = p1.x - p0.x;
         double dy = p1.y - p0.y;
         if (dx == 0.0 && dy == 0.0)
@@ -80,7 +80,7 @@ public class Lines {
         return octant(dx, dy);
     }
 
-    public Point switchToOctantZeroFrom(int octant, double x, double y) {
+    private static Point switchToOctantZeroFrom(int octant, int x, int y) {
         switch (octant) {
             case 7:
                 return new Point(x, y);
@@ -102,7 +102,7 @@ public class Lines {
         return null;
     }
 
-    public Point switchFromOctantZeroTo(int octant, double x, double y){
+    public static Point switchFromOctantZeroTo(int octant, int x, int y){
         switch(octant){
             case 7:
                 return new Point(x,y);
