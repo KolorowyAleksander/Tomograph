@@ -22,8 +22,7 @@ public class Lines {
         double error = deltaerr - 0.5;
         int y = intValue(a.y);
         for(int x = intValue(a.x); x < b.x; x++){
-            Point position = new Point(x, y);
-            position = switchFromOctantZeroTo(octant, x, y);
+            Point position = switchFromOctantZeroTo(octant, x, y);
             result.add(position);
             error += deltaerr;
             if(error >= 0.5){
