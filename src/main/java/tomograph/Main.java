@@ -29,11 +29,11 @@ public class Main extends Application {
         Label label = new Label("Label:");
         Label sliderValue = new Label(Double.toString(slider.getValue()));
         double alpha = 250;
-        double phi = 90;
+        double phi = 180;
         int r = 200;
         int n = 180;
         double deltaAlpha = 1;
-        double numberOfSteps = 360/deltaAlpha;
+        int numberOfSteps = (int)(360/deltaAlpha);
 
 
         Point position = Position.findEmmiterPosition(alpha, r);
@@ -59,7 +59,7 @@ public class Main extends Application {
             //drawing lines from detectors
             ArrayList<Point> line = Lines.arrayLine(position, detector);
             for (Point point : line) {
-                System.out.println(point.x + " :x; " + point.y + " :y ");
+//                System.out.println(point.x + " :x; " + point.y + " :y ");
                 canvas.getGraphicsContext2D()
                         .getPixelWriter()
                         .setColor((int) point.x, (int) point.y, Color.BLACK);
@@ -85,10 +85,10 @@ public class Main extends Application {
         sample.setFitWidth(400);
         GridPane.setConstraints(sample, 0, 0);
         GridPane.setConstraints(canvas, 3, 0);
-        GridPane.setConstraints(sinogram, 6, 0);
+        GridPane.setConstraints(sinogram, 3, 0);
         GridPane.setColumnSpan(sample, 3);
         grid.getChildren().add(sample);
-        grid.getChildren().add(canvas);
+        //grid.getChildren().add(canvas);
         grid.getChildren().add(sinogram);
         scene.setRoot(grid);
 

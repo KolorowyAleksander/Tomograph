@@ -30,11 +30,12 @@ public class Lines {
                 error -= 1.0;
             }
         }
+
         return result;
     }
 
-    private static int octant(double dx, double dy)
-    {
+    private static int octant(double dx, double dy) {
+
         if (dx == 0.0 && dy == 0.0)
             throw new IllegalArgumentException("Cannot compute the octant for point ( "+ dx + ", " + dy + " )" );
 

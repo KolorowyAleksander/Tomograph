@@ -3,33 +3,33 @@ package tomograph;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sinogram {
-    public static void averagePoints(Image image, Canvas sinogram, double alpha, double phi, int n, double deltaAlpha){
-        double numberOfSteps = 360/deltaAlpha;
-        for(int i = 0; i < numberOfSteps; i++){
-            Point emiter = Position.findEmmiterPosition(alpha+i*deltaAlpha, (int)image.getHeight()/2);
-            List<Point> detectors = Position.findDetectorsPositions(alpha+i*deltaAlpha, phi, (int)image.getHeight()/2, n);
-            for(int j = 0; j < n; j++){
-                ArrayList<Point> line = Lines.arrayLine(emiter, detectors.get(j));
+    public static void averagePoints(Image image, Canvas sinogram, double alpha, double phi, int n, double deltaAlpha) {
+        int numberOfSteps = (int) (360 / deltaAlpha);
+        for (int i = 0; i < numberOfSteps; i++) {
+            Point emitter = Position.findEmmiterPosition(alpha + i * deltaAlpha, (int) image.getHeight() / 2);
+            List<Point> detectors = Position.findDetectorsPositions(alpha + i * deltaAlpha, phi, (int) image.getHeight() / 2, n);
+            for (int j = 0; j < n; j++) {
+                ArrayList<Point> line = Lines.arrayLine(emitter, detectors.get(j));
                 sinogram.getGraphicsContext2D()
                         .getPixelWriter()
-                        .setArgb(j, i, averageLine(line, image));
+                        .setColor(j, i, Color.hsb(0.0, 0.0, averageLine(line, image)));
 
             }
         }
     }
 
-    private static int averageLine(ArrayList<Point> line, Image image){
-        int sum = 0;
-        for(Point point:line) {
-            sum += image.getPixelReader().getArgb((Math.round(point.x) < 0 ? 0 : Math.round(point.x)),
-                                                  (Math.round(point.y) < 0 ? 0 : Math.round(point.y)));
+    private static double averageLine(ArrayList<Point> line, Image image) {
+        double sum = 1.0;
+        for (Point point : line) {
+            sum += image.getPixelReader().getColor(point.x, point.y).getBrightness();
         }
 
-        return Math.round(sum/line.size());
+        return sum / line.size();
     }
 }
