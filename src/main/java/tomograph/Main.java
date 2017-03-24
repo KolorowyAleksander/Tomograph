@@ -5,7 +5,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -28,13 +27,11 @@ public class Main extends Application {
         Label label = new Label("Alpha?:");
         Label sliderValue = new Label(Double.toString(slider.getValue()));
         double alpha = 250;
-        double phi = 180;
-        int n = 100;
-        double deltaAlpha = 2;
-        int numberOfSteps = (int)(360/deltaAlpha);
+        double phi = 270;
+        int n = 180;
+        double deltaAlpha = 0.5;
 
-
-        WritableImage sinogram = new WritableImage(n, numberOfSteps);
+        WritableImage sinogram = new WritableImage(n, (int)(180/deltaAlpha));
 
         Sinogram.averagePoints(image, sinogram, alpha, phi, n, deltaAlpha);
         Image endImage = new InverseTransform(image, sinogram, alpha, phi, n, deltaAlpha).calculate();
@@ -61,6 +58,8 @@ public class Main extends Application {
         GridPane.setConstraints(sinogramView, 3, 0);
         GridPane.setConstraints(endView, 6, 0);
         GridPane.setColumnSpan(sample, 3);
+        GridPane.setColumnSpan(sinogramView, 3);
+        GridPane.setColumnSpan(endView, 3);
         grid.getChildren().add(sample);
         grid.getChildren().add(sinogramView);
         grid.getChildren().add(endView);

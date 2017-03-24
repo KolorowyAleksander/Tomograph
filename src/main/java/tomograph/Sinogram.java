@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Sinogram {
     public static void averagePoints(Image image, WritableImage sinogram, double alpha, double phi, int n, double deltaAlpha) {
-        int numberOfSteps = (int) (360 / deltaAlpha);
+        int numberOfSteps = (int) (180 / deltaAlpha);
 
         PixelWriter writer = sinogram.getPixelWriter();
         for (int i = 0; i < numberOfSteps; i++) {
