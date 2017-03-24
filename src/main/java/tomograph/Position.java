@@ -1,8 +1,6 @@
 package tomograph;
 
 
-import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +13,8 @@ public class Position {
         double x = r * cos(toRadians(alpha));
         double y = r * sin(toRadians(alpha));
 
-        return new Point(positionCheck((int)(x+r), 2*r),
-                         positionCheck((int)(y+r), 2*r));
+        return new Point(positionCheck((int) (x + r), 2 * r),
+                positionCheck((int) (y + r), 2 * r));
     }
 
     public static List<Point> findDetectorsPositions(double alpha, double phi, int r, int n) {
@@ -34,18 +32,18 @@ public class Position {
                 y = r * sin(toRadians(alpha + 90) + PI + (toRadians(phi) / 2));
             }
 
-            detectorsPositions.add(new Point(positionCheck((int)(x+r), 2*r),
-                                             positionCheck((int)(y+r), 2*r)));
+            detectorsPositions.add(new Point(positionCheck((int) (x + r), 2 * r),
+                    positionCheck((int) (y + r), 2 * r)));
         }
 
         return detectorsPositions;
     }
 
-    private static int positionCheck(int x, int height){
-        if(x < 0){
+    private static int positionCheck(int x, int height) {
+        if (x < 0) {
             return 0;
-        } else if( x > height-1) {
-            return height-1;
+        } else if (x > height - 1) {
+            return height - 1;
         } else {
             return x;
         }

@@ -10,70 +10,40 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println("Starting calculations");
 
         Image image = new Image(getClass().getResourceAsStream("/Shepp_logan.png"));
         Slider slider = new Slider(0, 100, 40);
-        Label label = new Label("Label:");
+        Label label = new Label("Alpha?:");
         Label sliderValue = new Label(Double.toString(slider.getValue()));
         double alpha = 250;
         double phi = 180;
-        int r = 200;
-        int n = 180;
-        double deltaAlpha = 1;
+        int n = 100;
+        double deltaAlpha = 2;
         int numberOfSteps = (int)(360/deltaAlpha);
 
 
-        Point position = Position.findEmmiterPosition(alpha, r);
-        List<Point> detectorspositon = Position.findDetectorsPositions(alpha, phi, r, n);
-
-        Canvas canvas = new Canvas(2 * r, 2 * r);
-        Canvas sinogram = new Canvas(n, numberOfSteps);
-
-        //drawing middle
-        canvas.getGraphicsContext2D().getPixelWriter().setColor(200, 200, Color.GREEN);
-
-        //drawing emmiter
-        canvas.getGraphicsContext2D()
-                .getPixelWriter()
-                .setColor(position.x, position.y, Color.RED);
-
-        //drawing detectors
-        for (Point detector : detectorspositon) {
-            canvas.getGraphicsContext2D()
-                    .getPixelWriter()
-                    .setColor(detector.x, detector.y, Color.BLACK);
-
-            //drawing lines from detectors
-            ArrayList<Point> line = Lines.arrayLine(position, detector);
-            for (Point point : line) {
-//                System.out.println(point.x + " :x; " + point.y + " :y ");
-                canvas.getGraphicsContext2D()
-                        .getPixelWriter()
-                        .setColor(point.x, point.y, Color.BLACK);
-            }
-        }
+        WritableImage sinogram = new WritableImage(n, numberOfSteps);
 
         Sinogram.averagePoints(image, sinogram, alpha, phi, n, deltaAlpha);
-
+        Image endImage = new InverseTransform(image, sinogram, alpha, phi, n, deltaAlpha).calculate();
 
         StackPane root = new StackPane();
 
         Scene scene = new Scene(root, 1250, 500);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Slider Sample");
+        primaryStage.setTitle("Tomograph");
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -81,15 +51,19 @@ public class Main extends Application {
         grid.setHgap(70);
 
         ImageView sample = new ImageView(image);
+        ImageView sinogramView = new ImageView(sinogram);
+        ImageView endView = new ImageView(endImage);
         sample.setFitHeight(400);
         sample.setFitWidth(400);
+        endView.setFitHeight(400);
+        endView.setFitWidth(400);
         GridPane.setConstraints(sample, 0, 0);
-        GridPane.setConstraints(canvas, 3, 0);
-        GridPane.setConstraints(sinogram, 3, 0);
+        GridPane.setConstraints(sinogramView, 3, 0);
+        GridPane.setConstraints(endView, 6, 0);
         GridPane.setColumnSpan(sample, 3);
         grid.getChildren().add(sample);
-        //grid.getChildren().add(canvas);
-        grid.getChildren().add(sinogram);
+        grid.getChildren().add(sinogramView);
+        grid.getChildren().add(endView);
         scene.setRoot(grid);
 
         label.setTextFill(Color.BLACK);
@@ -103,6 +77,7 @@ public class Main extends Application {
                 sliderValue.setText(String.format("%.2f", new_val));
             }
         });
+
         GridPane.setConstraints(slider, 1, 1);
         grid.getChildren().add(slider);
 
