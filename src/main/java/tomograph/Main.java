@@ -48,13 +48,13 @@ public class Main extends Application {
         //drawing emmiter
         canvas.getGraphicsContext2D()
                 .getPixelWriter()
-                .setColor((int) position.x, (int) position.y, Color.RED);
+                .setColor(position.x, position.y, Color.RED);
 
         //drawing detectors
         for (Point detector : detectorspositon) {
             canvas.getGraphicsContext2D()
                     .getPixelWriter()
-                    .setColor((int) detector.x, (int) detector.y, Color.BLACK);
+                    .setColor(detector.x, detector.y, Color.BLACK);
 
             //drawing lines from detectors
             ArrayList<Point> line = Lines.arrayLine(position, detector);
@@ -62,7 +62,7 @@ public class Main extends Application {
 //                System.out.println(point.x + " :x; " + point.y + " :y ");
                 canvas.getGraphicsContext2D()
                         .getPixelWriter()
-                        .setColor((int) point.x, (int) point.y, Color.BLACK);
+                        .setColor(point.x, point.y, Color.BLACK);
             }
         }
 
