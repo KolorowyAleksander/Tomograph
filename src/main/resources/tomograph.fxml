@@ -1,5 +1,42 @@
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
 <GridPane fx:controller="tomograph.Controller"
           fx:id="grid"
-          xmlns:fx="http://javafx.com/fxml" alignment="center">
+          xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
+  <padding>
+    <Insets top="10" right="10" bottom="10" left="10"/>
+  </padding>
+
+  <GridPane fx:id="firstColumn" GridPane.columnIndex="0" GridPane.rowIndex="0" hgap="5" vgap="5" minWidth="200">
+    <Label fx:id="alphaLabel" GridPane.rowIndex="0" GridPane.columnIndex="0">α:</Label>
+    <Label fx:id="alphaSliderValue" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Slider fx:id="alphaSlider" GridPane.rowIndex="1" GridPane.columnIndex="0" max="5" snapToTicks="true"
+            majorTickUnit="0.1" minorTickCount="0"/>
+
+    <Label fx:id="phiLabel" GridPane.rowIndex="2" GridPane.columnIndex="0">ϕ:</Label>
+    <Label fx:id="phiSliderValue" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Slider fx:id="phiSlider" GridPane.rowIndex="3" GridPane.columnIndex="0" min="1" max="360" snapToTicks="true"
+            majorTickUnit="1" minorTickCount="0"/>
+
+    <Label fx:id="nLabel" GridPane.rowIndex="4" GridPane.columnIndex="0">n:</Label>
+    <Label fx:id="nSliderValue" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Slider fx:id="nSlider" GridPane.rowIndex="5" GridPane.columnIndex="0" min="10" max="360" snapToTicks="true"
+            majorTickUnit="1" minorTickCount="0"/>
+
+    <Label fx:id="stepLabel" GridPane.rowIndex="6" GridPane.columnIndex="0">step:</Label>
+    <Label fx:id="stepSliderValue" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    <Slider fx:id="stepSlider" GridPane.rowIndex="7" GridPane.columnIndex="0" min="1" max="360" snapToTicks="true"/>
+
+    <Button fx:id="calculateButton" GridPane.rowIndex="9" GridPane.columnIndex="0">calculate</Button>
+  </GridPane>
+
+  <ImageView fx:id="sample" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="400" fitWidth="400">
+    <Image fx:id="image" url="imageSamples/Shepp_logan.png"/>
+  </ImageView>
+  <ImageView fx:id="endView" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="400" fitWidth="400"/>
+  <ImageView fx:id="sinogramView" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="500"/>
 </GridPane>

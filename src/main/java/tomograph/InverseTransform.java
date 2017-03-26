@@ -4,67 +4,69 @@ package tomograph;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InverseTransform extends WritableImage {
+public class InverseTransform extends CalculationRepresentation {
 
-    private Image sourceSinogram;
-    private double phi;
-    private int n;
-    private double deltaAlpha;
-    private double radius;
+    private double min = Double.MAX_VALUE, max = 0.0;
     private double[][] tab;
 
-    public InverseTransform(int width, int height, Image sinogram, double phi, int n, double deltaAlpha) {
-        super(width, height);
-        this.sourceSinogram = sinogram;
-        this.phi = phi;
-        this.n = n;
-        this.deltaAlpha = deltaAlpha;
-        this.radius = (double)width/2;
+    public InverseTransform(int width,
+                            int height,
+                            Image sinogram,
+                            double phi,
+                            int n,
+                            double deltaAlpha) {
+
+        super(width, height, sinogram, phi, n, deltaAlpha);
+
+        this.radius = (double) width / 2;
         this.tab = new double[width][height];
 
         for (int i = 0; i < this.getWidth(); i++) {
             for (int j = 0; j < this.getHeight(); j++) {
-                tab[i][j] = 1.0;
+                tab[i][j] = 0.0;
             }
         }
     }
 
-    public void calculate() {
-        System.out.println("calculating reverse transform");
+    public void calculate(int numberOfSteps) {
 
-        int numberOfSteps = (int) (180 / this.deltaAlpha);
-
-        PixelReader reader = this.sourceSinogram.getPixelReader();
-        for (int i = 0; i < numberOfSteps; i++) {
-            Point emitter = Position.findEmmiterPosition(90 + i * deltaAlpha, (int) radius);
+        PixelReader reader = this.sourceImage.getPixelReader();
+        for (int step = 0; step < numberOfSteps; step++) {
+            Point emitter = Position.findEmmiterPosition(step * deltaAlpha, (int) radius);
             List<Point> detectors =
-                    Position.findDetectorsPositions(90 + i * deltaAlpha, this.phi, (int) radius, this.n);
+                    Position.findDetectorsPositions(step * deltaAlpha, this.phi, (int) radius, this.n);
 
-            for (int j = 0; j < n; j++) {
-                ArrayList<Point> line = Lines.arrayLine(emitter, detectors.get(j));
-                for (Point point : line) {
-                    tab[point.x][point.y] += reader.getColor(j, i).getBrightness();
-                }
-            }
+            calculateLine(reader, emitter, detectors, step);
         }
+
 
         PixelWriter writer = this.getPixelWriter();
         for (int i = 0; i < (int) this.getWidth(); i++) {
             for (int j = 0; j < (int) this.getHeight(); j++) {
-                writer.setColor(i, j, Color.hsb(0.0, 0.0, tab[i][j]/numberOfSteps));
+                writer.setColor(i, j, Color.hsb(0.0, 0.0, (tab[i][j] - min) / (max - min)));
             }
         }
+
+        normalize();
     }
 
+    private void calculateLine(PixelReader reader, Point emitter, List<Point> detectors, int step) {
 
-    public void calculateStepByStep() {
-        throw new NotImplementedException();
+        for (int j = 0; j < n; j++) {
+            ArrayList<Point> line = Lines.arrayLine(emitter, detectors.get(j));
+            for (Point point : line) {
+                double brightness = reader.getColor(j, step).getBrightness();
+                tab[point.x][point.y] += brightness;
+                max = Math.max(tab[point.x][point.y], max);
+                min = Math.min(tab[point.x][point.y], min);
+            }
+        }
+
     }
 }
