@@ -33,7 +33,7 @@ public class Main extends Application {
 
         WritableImage sinogram = new WritableImage(n, (int)(180/deltaAlpha));
 
-        Sinogram.averagePoints(image, sinogram, alpha, phi, n, deltaAlpha);
+        new Sinogram(image, sinogram, alpha, phi, n, deltaAlpha).averagePoints();
         Image endImage = new InverseTransform(image, sinogram, alpha, phi, n, deltaAlpha).calculate();
 
         StackPane root = new StackPane();

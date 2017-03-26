@@ -11,7 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sinogram {
-    public static void averagePoints(Image image, WritableImage sinogram, double alpha, double phi, int n, double deltaAlpha) {
+    private Image image;
+    private WritableImage sinogram;
+    private double alpha;
+    private double phi;
+    private int n;
+    private double deltaAlpha;
+
+    public Sinogram(Image image, WritableImage sinogram, double alpha, double phi, int n, double deltaAlpha){
+        this.image = image;
+        this.sinogram = sinogram;
+        this.alpha = alpha;
+        this.phi = phi;
+        this.n = n;
+        this.deltaAlpha = deltaAlpha;
+    }
+
+    public void averagePoints() {
         int numberOfSteps = (int) (180 / deltaAlpha);
 
         PixelWriter writer = sinogram.getPixelWriter();
@@ -20,13 +36,13 @@ public class Sinogram {
             List<Point> detectors = Position.findDetectorsPositions(alpha + i * deltaAlpha, phi, (int) image.getHeight() / 2, n);
             for (int j = 0; j < n; j++) {
                 ArrayList<Point> line = Lines.arrayLine(emitter, detectors.get(j));
-                writer.setColor(j, i, Color.hsb(0.0, 0.0, averageLine(line, image)));
+                writer.setColor(j, i, Color.hsb(0.0, 0.0, averageLine(line)));
             }
         }
     }
 
-    public static double averageLine(ArrayList<Point> line, Image image) {
-        PixelReader reader = image.getPixelReader();
+    public double averageLine(ArrayList<Point> line) {
+        PixelReader reader = this.image.getPixelReader();
         return line.stream()
                 .mapToDouble(point -> reader.getColor(point.x, point.y).getBrightness())
                 .average()
