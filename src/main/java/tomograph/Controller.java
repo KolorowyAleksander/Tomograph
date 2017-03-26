@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
@@ -22,10 +21,11 @@ public class Controller implements Initializable {
     private int n;
 
     private Image image;
-    private WritableImage sinogram;
-    private Image endImage;
+    private Sinogram sinogram;
+    private InverseTransform endImage;
 
-    private Button button;
+    private Button calculateButton;
+    private Button stepByStepButton;
     private Slider alphaSlider;
     private Slider phiSlider;
     private Slider nSlider;
@@ -44,14 +44,37 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        image = new Image(getClass().getResourceAsStream("/imageSamples/Shepp_logan.png"));
+        this.image = new Image(getClass().getResourceAsStream("/imageSamples/Shepp_logan.png"));
         addElements();
 
-        button.setOnMouseClicked(o -> {
-            System.out.println("button");
-            this.sinogram = new Sinogram(image, phi, n, deltaAlpha).averagePoints();
-            this.endImage = new InverseTransform(image, this.sinogram, phi, n, deltaAlpha).calculate();
+        this.phi = phiSlider.getValue();
+        this.deltaAlpha = alphaSlider.getValue();
+        this.n = (int) nSlider.getValue();
+
+
+        calculateButton.setOnMouseClicked(o -> {
+            this.sinogram = new Sinogram(image, phi, n, deltaAlpha);
+            this.endImage =
+                    new InverseTransform((int) this.image.getWidth(),
+                            (int) this.image.getHeight(),
+                            this.sinogram,
+                            phi,
+                            n,
+                            deltaAlpha);
+            this.endImage.calculate();
             sinogramView.setImage(this.sinogram);
+            endView.setImage(this.endImage);
+        });
+
+        stepByStepButton.setOnMouseClicked(o -> {
+            this.sinogram = new Sinogram(image, phi, n, deltaAlpha);
+            this.endImage = new InverseTransform((int) this.image.getWidth(),
+                    (int) this.image.getHeight(),
+                    this.sinogram,
+                    phi,
+                    n,
+                    deltaAlpha);
+            this.endImage.calculateStepByStep();
             endView.setImage(this.endImage);
         });
 
@@ -74,16 +97,12 @@ public class Controller implements Initializable {
             System.out.println(n);
             sliderValue3.setText(String.format("%.2f", value));
         });
-
-
-        this.phi = phiSlider.getValue();
-        this.deltaAlpha = alphaSlider.getValue();
-        this.n = (int)nSlider.getValue();
     }
 
     @Deprecated
     private void addElements() {
-        this.button = new Button("calculate");
+        this.calculateButton = new Button("calculate");
+        this.stepByStepButton = new Button("step by step");
 
         this.alphaSlider = new Slider(0, 5, 1);
         alphaSlider.setSnapToTicks(true);
@@ -117,8 +136,10 @@ public class Controller implements Initializable {
         endView.setFitHeight(400);
         endView.setFitWidth(400);
 
-        //a button
-        GridPane.setConstraints(button, 3,2);
+        //a calculateButton
+        GridPane.setConstraints(calculateButton, 3, 2);
+
+        GridPane.setConstraints(stepByStepButton, 3, 3);
 
         //----------------------------deltaAlpha customize
         label.setTextFill(Color.BLACK);
@@ -170,7 +191,8 @@ public class Controller implements Initializable {
         GridPane.setColumnSpan(endView, 3);
 
         //adding children
-        grid.getChildren().add(button);
+        grid.getChildren().add(calculateButton);
+        grid.getChildren().add(stepByStepButton);
         grid.getChildren().add(sample);
         grid.getChildren().add(sinogramView);
         grid.getChildren().add(endView);
