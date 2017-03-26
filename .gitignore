@@ -1,3 +1,5 @@
+# Windows specific
+./**/Thumbs.db
 
 # Created by https://www.gitignore.io/api/intellij
 
