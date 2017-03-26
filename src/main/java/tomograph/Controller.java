@@ -20,9 +20,24 @@ public class Controller implements Initializable {
     private double deltaAlpha;
     private double phi;
     private int n;
-    private Image endImage;
+
     private Image image;
     private WritableImage sinogram;
+    private Image endImage;
+
+    private Button button;
+    private Slider alphaSlider;
+    private Slider phiSlider;
+    private Slider nSlider;
+    private ImageView sample;
+    private ImageView sinogramView;
+    private ImageView endView;
+    private Label sliderValue;
+    private Label sliderValue2;
+    private Label sliderValue3;
+    private Label label;
+    private Label label2;
+    private Label label3;
 
     @FXML
     private GridPane grid;
@@ -30,43 +45,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         image = new Image(getClass().getResourceAsStream("/imageSamples/Shepp_logan.png"));
-        Button button = new Button("calculate");
-        Slider alphaSlider = new Slider(0, 5, 1);
-        alphaSlider.setSnapToTicks(true);
-        alphaSlider.setMajorTickUnit(0.1);
-        alphaSlider.setMinorTickCount(0);
-        alphaSlider.setBlockIncrement(0.1);
-        Slider phiSlider = new Slider(0, 360, 270);
-        phiSlider.setSnapToTicks(true);
-        phiSlider.setMajorTickUnit(1);
-        phiSlider.setMinorTickCount(0);
-        Slider nSlider = new Slider(0, 360, 180);
-        nSlider.setSnapToTicks(true);
-        nSlider.setMajorTickUnit(1);
-        nSlider.setMinorTickCount(0);
-        Label label = new Label("delta Alpha:");
-        Label sliderValue = new Label(Double.toString(alphaSlider.getValue()));
-        Label label2 = new Label("Phi:");
-        Label sliderValue2 = new Label(Double.toString(phiSlider.getValue()));
-        Label label3 = new Label("n:");
-        Label sliderValue3 = new Label(Double.toString(nSlider.getValue()));
-
-//        this.phi = 90.0;
-//        this.n = 90;
-//        this.deltaAlpha = 2.0;
-
-
-        grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setVgap(10);
-        grid.setHgap(70);
-
-        GridPane.setConstraints(button, 3,2);
-        grid.getChildren().add(button);
-
-        ImageView sample = new ImageView(image);
-        ImageView sinogramView = new ImageView(this.sinogram);
-        ImageView endView = new ImageView(this.endImage);
-
+        addElements();
 
         button.setOnMouseClicked(o -> {
             System.out.println("button");
@@ -77,33 +56,74 @@ public class Controller implements Initializable {
         });
 
 
-        sample.setFitHeight(400);
-        sample.setFitWidth(400);
-        endView.setFitHeight(400);
-        endView.setFitWidth(400);
-
-        GridPane.setConstraints(sample, 0, 0);
-        GridPane.setConstraints(sinogramView, 3, 0);
-        GridPane.setConstraints(endView, 6, 0);
-
-        GridPane.setColumnSpan(sample, 3);
-        GridPane.setColumnSpan(sinogramView, 3);
-        GridPane.setColumnSpan(endView, 3);
-
-        grid.getChildren().add(sample);
-        grid.getChildren().add(sinogramView);
-        grid.getChildren().add(endView);
-
-        //----------------------------deltaAlpha customize
-        label.setTextFill(Color.BLACK);
-        GridPane.setConstraints(label, 0, 1);
-        grid.getChildren().add(label);
-
         alphaSlider.valueProperty().addListener(o -> {
             double value = alphaSlider.getValue();
             deltaAlpha = value;
             sliderValue.setText(String.format("%.2f", value));
         });
+
+        phiSlider.valueProperty().addListener(o -> {
+            double value = phiSlider.getValue();
+            phi = value;
+            sliderValue2.setText(String.format("%.2f", value));
+        });
+
+        nSlider.valueProperty().addListener(o -> {
+            double value = nSlider.getValue();
+            n = (int) value;
+            System.out.println(n);
+            sliderValue3.setText(String.format("%.2f", value));
+        });
+
+
+        this.phi = phiSlider.getValue();
+        this.deltaAlpha = alphaSlider.getValue();
+        this.n = (int)nSlider.getValue();
+    }
+
+    @Deprecated
+    private void addElements() {
+        this.button = new Button("calculate");
+
+        this.alphaSlider = new Slider(0, 5, 1);
+        alphaSlider.setSnapToTicks(true);
+        alphaSlider.setMajorTickUnit(0.1);
+        alphaSlider.setMinorTickCount(0);
+        alphaSlider.setBlockIncrement(0.1);
+
+        this.phiSlider = new Slider(0, 360, 270);
+        phiSlider.setSnapToTicks(true);
+        phiSlider.setMajorTickUnit(1);
+        phiSlider.setMinorTickCount(0);
+
+        this.nSlider = new Slider(0, 360, 180);
+        nSlider.setSnapToTicks(true);
+        nSlider.setMajorTickUnit(1);
+        nSlider.setMinorTickCount(0);
+
+        this.label = new Label("delta Alpha:");
+        this.sliderValue = new Label(Double.toString(alphaSlider.getValue()));
+        this.label2 = new Label("Phi:");
+        this.sliderValue2 = new Label(Double.toString(phiSlider.getValue()));
+        this.label3 = new Label("n:");
+        this.sliderValue3 = new Label(Double.toString(nSlider.getValue()));
+
+        this.sample = new ImageView(this.image);
+        this.sinogramView = new ImageView(this.sinogram);
+        this.endView = new ImageView(this.endImage);
+
+        sample.setFitHeight(400);
+        sample.setFitWidth(400);
+        endView.setFitHeight(400);
+        endView.setFitWidth(400);
+
+        //a button
+        GridPane.setConstraints(button, 3,2);
+
+        //----------------------------deltaAlpha customize
+        label.setTextFill(Color.BLACK);
+        GridPane.setConstraints(label, 0, 1);
+        grid.getChildren().add(label);
 
         GridPane.setConstraints(alphaSlider, 1, 1);
         grid.getChildren().add(alphaSlider);
@@ -117,12 +137,6 @@ public class Controller implements Initializable {
         GridPane.setConstraints(label2, 0, 2);
         grid.getChildren().add(label2);
 
-        phiSlider.valueProperty().addListener(o -> {
-            double value = phiSlider.getValue();
-            phi = value;
-            sliderValue2.setText(String.format("%.2f", value));
-        });
-
         GridPane.setConstraints(phiSlider, 1, 2);
         grid.getChildren().add(phiSlider);
 
@@ -135,13 +149,6 @@ public class Controller implements Initializable {
         GridPane.setConstraints(label3, 0, 3);
         grid.getChildren().add(label3);
 
-        nSlider.valueProperty().addListener(o -> {
-            double value = nSlider.getValue();
-            n = (int) value;
-            System.out.println(n);
-            sliderValue3.setText(String.format("%.2f", value));
-        });
-
         GridPane.setConstraints(nSlider, 1, 3);
         grid.getChildren().add(nSlider);
 
@@ -149,8 +156,23 @@ public class Controller implements Initializable {
         GridPane.setConstraints(sliderValue3, 2, 3);
         grid.getChildren().add(sliderValue3);
 
-        this.phi = phiSlider.getValue();
-        this.deltaAlpha = alphaSlider.getValue();
-        this.n = (int)nSlider.getValue();
+        //grid constraints
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(10);
+        grid.setHgap(70);
+
+        GridPane.setConstraints(sample, 0, 0);
+        GridPane.setConstraints(sinogramView, 3, 0);
+        GridPane.setConstraints(endView, 6, 0);
+
+        GridPane.setColumnSpan(sample, 3);
+        GridPane.setColumnSpan(sinogramView, 3);
+        GridPane.setColumnSpan(endView, 3);
+
+        //adding children
+        grid.getChildren().add(button);
+        grid.getChildren().add(sample);
+        grid.getChildren().add(sinogramView);
+        grid.getChildren().add(endView);
     }
 }

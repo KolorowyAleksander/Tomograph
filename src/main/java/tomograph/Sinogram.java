@@ -32,8 +32,8 @@ public class Sinogram {
 
         PixelWriter writer = sinogram.getPixelWriter();
         for (int i = 0; i < numberOfSteps; i++) {
-            Point emitter = Position.findEmmiterPosition(i * deltaAlpha, (int) image.getHeight() / 2);
-            List<Point> detectors = Position.findDetectorsPositions(i * deltaAlpha, phi, (int) image.getHeight() / 2, n);
+            Point emitter = Position.findEmmiterPosition(90 + i * deltaAlpha, (int) image.getHeight() / 2);
+            List<Point> detectors = Position.findDetectorsPositions(90 + i * deltaAlpha, phi, (int) image.getHeight() / 2, n);
             for (int j = 0; j < n; j++) {
                 ArrayList<Point> line = Lines.arrayLine(emitter, detectors.get(j));
                 writer.setColor(j, i, Color.hsb(0.0, 0.0, averageLine(line)));
