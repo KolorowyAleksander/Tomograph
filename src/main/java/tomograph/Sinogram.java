@@ -18,27 +18,30 @@ public class Sinogram {
     private int n;
     private double deltaAlpha;
 
-    public Sinogram(Image image, WritableImage sinogram, double alpha, double phi, int n, double deltaAlpha){
+    public Sinogram(Image image, double phi, int n, double deltaAlpha){
         this.image = image;
-        this.sinogram = sinogram;
-        this.alpha = alpha;
+        this.sinogram =  new WritableImage(n, (int)(180/deltaAlpha));
         this.phi = phi;
         this.n = n;
         this.deltaAlpha = deltaAlpha;
     }
 
-    public void averagePoints() {
+    public WritableImage averagePoints() {
+        System.out.println("calculating sinogram");
+
         int numberOfSteps = (int) (180 / deltaAlpha);
 
         PixelWriter writer = sinogram.getPixelWriter();
         for (int i = 0; i < numberOfSteps; i++) {
-            Point emitter = Position.findEmmiterPosition(alpha + i * deltaAlpha, (int) image.getHeight() / 2);
-            List<Point> detectors = Position.findDetectorsPositions(alpha + i * deltaAlpha, phi, (int) image.getHeight() / 2, n);
+            Point emitter = Position.findEmmiterPosition(i * deltaAlpha, (int) image.getHeight() / 2);
+            List<Point> detectors = Position.findDetectorsPositions(i * deltaAlpha, phi, (int) image.getHeight() / 2, n);
             for (int j = 0; j < n; j++) {
                 ArrayList<Point> line = Lines.arrayLine(emitter, detectors.get(j));
                 writer.setColor(j, i, Color.hsb(0.0, 0.0, averageLine(line)));
             }
         }
+
+        return this.sinogram;
     }
 
     public double averageLine(ArrayList<Point> line) {

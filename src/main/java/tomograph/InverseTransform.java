@@ -21,10 +21,9 @@ public class InverseTransform {
 //    public List[][] drawing;
     public double[][] tab;
 
-    public InverseTransform(Image image, Image sinogram, double alpha, double phi, int n, double deltaAlpha) {
+    public InverseTransform(Image image, Image sinogram, double phi, int n, double deltaAlpha) {
         this.image = image;
         this.sinogram = sinogram;
-        this.alpha = alpha;
         this.phi = phi;
         this.n = n;
         this.deltaAlpha = deltaAlpha;
@@ -41,6 +40,7 @@ public class InverseTransform {
     }
 
     public Image calculate() {
+        System.out.println("calculating reverse transform");
         WritableImage endImage = new WritableImage((int) this.image.getHeight(), (int) this.image.getHeight());
         int numberOfSteps = (int) (180 / this.deltaAlpha);
         PixelReader reader = this.sinogram.getPixelReader();
