@@ -31,11 +31,11 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         image = new Image(getClass().getResourceAsStream("/imageSamples/Shepp_logan.png"));
         Button button = new Button("calculate");
-        Slider alphaSlider = new Slider(0, 5, 0.2);
+        Slider alphaSlider = new Slider(0, 5, 1);
         alphaSlider.setSnapToTicks(true);
-        alphaSlider.setMajorTickUnit(1);
-        alphaSlider.setMinorTickCount(4);
-        alphaSlider.setBlockIncrement(0.2);
+        alphaSlider.setMajorTickUnit(0.1);
+        alphaSlider.setMinorTickCount(0);
+        alphaSlider.setBlockIncrement(0.1);
         Slider phiSlider = new Slider(0, 360, 270);
         phiSlider.setSnapToTicks(true);
         phiSlider.setMajorTickUnit(1);
@@ -51,9 +51,9 @@ public class Controller implements Initializable {
         Label label3 = new Label("n:");
         Label sliderValue3 = new Label(Double.toString(nSlider.getValue()));
 
-        this.phi = 90.0;
-        this.n = 90;
-        this.deltaAlpha = 2.0;
+//        this.phi = 90.0;
+//        this.n = 90;
+//        this.deltaAlpha = 2.0;
 
 
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -93,10 +93,6 @@ public class Controller implements Initializable {
         grid.getChildren().add(sample);
         grid.getChildren().add(sinogramView);
         grid.getChildren().add(endView);
-
-
-
-
 
         //----------------------------deltaAlpha customize
         label.setTextFill(Color.BLACK);
@@ -153,8 +149,8 @@ public class Controller implements Initializable {
         GridPane.setConstraints(sliderValue3, 2, 3);
         grid.getChildren().add(sliderValue3);
 
-
-
+        this.phi = phiSlider.getValue();
+        this.deltaAlpha = alphaSlider.getValue();
+        this.n = (int)nSlider.getValue();
     }
-
 }

@@ -1,5 +1,8 @@
 # Windows specific
-./**/Thumbs.db
+**/Thumbs.db
+
+#intellij dictionaries
+.idea/dictionaries/
 
 # Created by https://www.gitignore.io/api/intellij
 
