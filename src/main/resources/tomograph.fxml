@@ -1,0 +1,5 @@
+<?import javafx.scene.layout.GridPane?>
+<GridPane fx:controller="tomograph.Controller"
+          fx:id="grid"
+          xmlns:fx="http://javafx.com/fxml" alignment="center">
+</GridPane>
