@@ -24,7 +24,7 @@ public abstract class CalculationRepresentation extends WritableImage {
     }
 
     protected void normalize() {
-        double max = 0.0, min = 1.0;
+        double max = 0.0, min = Double.MAX_VALUE;
         PixelReader pixelReader = this.getPixelReader();
 
         for (int i = 0; i < this.getWidth(); i++) {

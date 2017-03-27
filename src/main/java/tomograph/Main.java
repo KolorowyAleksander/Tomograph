@@ -25,7 +25,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         root = FXMLLoader.load(Main.class.getResource("/tomograph.fxml"));
 
-        Scene scene = new Scene(root, 1376, 510);
+        Scene scene = new Scene(root, 800, 510);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Tomograph");
         primaryStage.show();

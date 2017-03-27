@@ -92,15 +92,19 @@ public class Controller implements Initializable {
             this.deltaAlpha = value;
             this.numberOfSteps = (int) (360 / deltaAlpha);
 
+            alphaSliderValue.setText(String.format("%.1f", value));
+
+
             stepSlider.setMax(numberOfSteps);
             stepSlider.setValue(numberOfSteps);
-            alphaSliderValue.setText(String.format("%.2f", value));
+            this.step = numberOfSteps;
+
         });
 
         phiSlider.valueProperty().addListener(o -> {
             double value = phiSlider.getValue();
             this.phi = value;
-            phiSliderValue.setText(String.format("%.2f", value));
+            phiSliderValue.setText(String.format("%d", (int) value));
         });
 
         nSlider.valueProperty().addListener(o -> {
@@ -114,12 +118,12 @@ public class Controller implements Initializable {
             this.step = value;
             stepSliderValue.setText(String.format("%d", value));
 
-            if (!stepSlider.isValueChanging()) {
-                calculateButton.fireEvent(generateEmptyMouseEvent());
-            }
+//            if (!stepSlider.isValueChanging()) {
+//                calculateButton.fireEvent(generateEmptyMouseEvent());
+//            }
         });
 
-        imageChoice.valueProperty().addListener(o->{
+        imageChoice.valueProperty().addListener(o -> {
             this.image = new Image("imageSamples/" + imageChoice.getValue());
             sample.setImage(this.image);
         });
@@ -144,7 +148,8 @@ public class Controller implements Initializable {
 
         this.image = new Image("imageSamples/" + imageChoice.getValue());
         this.sinogram = new Sinogram(image, phi, n, deltaAlpha);
-        this.endImage = new InverseTransform((int) image.getWidth(), (int) image.getHeight(), sinogram, phi, n, deltaAlpha, numberOfSteps);
+        this.endImage = new InverseTransform((int) image.getWidth(), (int) image.getHeight(),
+                sinogram, phi, n, deltaAlpha, numberOfSteps);
 
         this.sample.setImage(image);
         this.sinogramView.setImage(sinogram);

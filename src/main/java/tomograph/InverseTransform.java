@@ -5,14 +5,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InverseTransform extends CalculationRepresentation {
 
-    private double min = Double.MAX_VALUE, max = 0.0;
+    private double lMin = Double.MAX_VALUE, lMax = 0.0;
     protected int numberOfSteps;
     private double[][] tab;
 
@@ -23,7 +22,6 @@ public class InverseTransform extends CalculationRepresentation {
                             int n,
                             double deltaAlpha,
                             int numberOfSteps) {
-
         super(width, height, sinogram, phi, n, deltaAlpha);
 
         this.radius = (double) width / 2;
@@ -46,17 +44,16 @@ public class InverseTransform extends CalculationRepresentation {
                 for (Point point : line) {
                     double brightness = reader.getColor(j, step).getBrightness();
                     tab[point.x][point.y] += brightness;
-                    max = Math.max(tab[point.x][point.y], max);
-                    min = Math.min(tab[point.x][point.y], min);
+                    lMax = Math.max(tab[point.x][point.y], lMax);
+                    lMin = Math.min(tab[point.x][point.y], lMin);
                 }
             }
         }
 
-
         PixelWriter writer = this.getPixelWriter();
         for (int i = 0; i < (int) this.getWidth(); i++) {
             for (int j = 0; j < (int) this.getHeight(); j++) {
-                writer.setColor(i, j, Color.hsb(0.0, 0.0, (tab[i][j] - min) / (max - min)));
+                writer.setColor(i, j, Color.hsb(0.0, 0.0, (tab[i][j] - lMin) / (lMax - lMin)));
             }
         }
 
