@@ -1,9 +1,10 @@
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
+<?import java.lang.String?>
 <GridPane fx:controller="tomograph.Controller"
           fx:id="grid"
           xmlns:fx="http://javafx.com/fxml" hgap="10" vgap="10">
@@ -29,14 +30,24 @@
 
     <Label fx:id="stepLabel" GridPane.rowIndex="6" GridPane.columnIndex="0">step:</Label>
     <Label fx:id="stepSliderValue" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-    <Slider fx:id="stepSlider" GridPane.rowIndex="7" GridPane.columnIndex="0" min="1" max="360" snapToTicks="true"/>
+    <Slider fx:id="stepSlider" GridPane.rowIndex="7" GridPane.columnIndex="0" min="1" max="360" snapToTicks="true"
+            majorTickUnit="1" minorTickCount="0"/>
 
+    <ChoiceBox fx:id="imageChoice" value="SheppLogan.png" GridPane.rowIndex="8" GridPane.columnIndex="0">
+      <items>
+        <FXCollections fx:factory="observableArrayList" >
+          <String fx:value="Kolo.jpg"/>
+          <String fx:value="Kropka.jpg"/>
+          <String fx:value="Kwadraty.jpg"/>
+          <String fx:value="Paski.jpg"/>
+          <String fx:value="SheppLogan.png"/>
+        </FXCollections>
+      </items>
+    </ChoiceBox>
     <Button fx:id="calculateButton" GridPane.rowIndex="9" GridPane.columnIndex="0">calculate</Button>
   </GridPane>
 
-  <ImageView fx:id="sample" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="400" fitWidth="400">
-    <Image fx:id="image" url="imageSamples/Shepp_logan.png"/>
-  </ImageView>
+  <ImageView fx:id="sample" GridPane.rowIndex="0" GridPane.columnIndex="1" fitHeight="400" fitWidth="400"/>
   <ImageView fx:id="endView" GridPane.rowIndex="0" GridPane.columnIndex="2" fitHeight="400" fitWidth="400"/>
   <ImageView fx:id="sinogramView" GridPane.rowIndex="0" GridPane.columnIndex="3" fitHeight="500"/>
 </GridPane>

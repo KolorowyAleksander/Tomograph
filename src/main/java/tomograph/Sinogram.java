@@ -20,7 +20,7 @@ public class Sinogram extends CalculationRepresentation {
         this.calculate();
     }
 
-    public void calculate() {
+    private void calculate() {
         int numberOfSteps = (int) (360 / this.deltaAlpha);
 
         PixelWriter writer = this.getPixelWriter();

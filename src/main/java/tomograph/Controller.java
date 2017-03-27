@@ -3,10 +3,13 @@ package tomograph;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 import java.net.URL;
@@ -14,17 +17,18 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    private double numberOfSteps;
     private double deltaAlpha;
     private double phi;
     private int n;
     private int step;
+    private int numberOfSteps;
 
     private Sinogram sinogram;
     private InverseTransform endImage;
+    private Image image;
 
     @FXML
-    Image image;
+    private ChoiceBox imageChoice;
     @FXML
     private Button calculateButton;
     @FXML
@@ -54,50 +58,32 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        alphaSlider.setValue(1.0);
-        phiSlider.setValue(270.0);
-        nSlider.setValue(180);
-        stepSlider.setValue(360 / alphaSlider.getValue());
-
-        this.alphaSliderValue.setText(String.valueOf(alphaSlider.getValue()));
-        this.phiSliderValue.setText(Double.toString(phiSlider.getValue()));
-        this.nSliderValue.setText(Double.toString(nSlider.getValue()));
-        this.stepSliderValue.setText(Double.toString(stepSlider.getValue()));
-
-        this.phi = phiSlider.getValue();
-        this.deltaAlpha = alphaSlider.getValue();
-        this.n = (int) nSlider.getValue();
-        this.step = (int) stepSlider.getValue();
-
+        setInitialValues();
 
         calculateButton.setOnMouseClicked(o -> {
             firstColumn.setDisable(true);
 
-            if (sinogram == null
-                    || sinogram.phi != phi
-                    || sinogram.n != n
+            if (sinogram.phi != phi || sinogram.n != n
                     || sinogram.deltaAlpha != deltaAlpha
-                    || sinogram.sourceImage != image) {
+                    || sinogram.sourceImage != image
+                    || endImage.numberOfSteps != step) {
+
                 this.sinogram = new Sinogram(image, phi, n, deltaAlpha);
+
+                this.endImage = new InverseTransform(
+                        (int) this.image.getWidth(),
+                        (int) this.image.getHeight(),
+                        this.sinogram,
+                        phi,
+                        n,
+                        deltaAlpha,
+                        step
+                );
             }
 
-            if (endImage == null
-                    || endImage.phi != phi
-                    || endImage.deltaAlpha != deltaAlpha
-                    || endImage.sourceImage != sinogram) {
-                this.endImage =
-                        new InverseTransform((int) this.image.getWidth(),
-                                (int) this.image.getHeight(),
-                                this.sinogram,
-                                phi,
-                                n,
-                                deltaAlpha);
-            }
-
-            this.endImage.calculate(step);
             sinogramView.setImage(this.sinogram);
             endView.setImage(this.endImage);
+
             firstColumn.setDisable(false);
         });
 
@@ -127,6 +113,62 @@ public class Controller implements Initializable {
             int value = (int) stepSlider.getValue();
             this.step = value;
             stepSliderValue.setText(String.format("%d", value));
+
+            if (!stepSlider.isValueChanging()) {
+                calculateButton.fireEvent(generateEmptyMouseEvent());
+            }
         });
+
+        imageChoice.valueProperty().addListener(o->{
+            this.image = new Image("imageSamples/" + imageChoice.getValue());
+            sample.setImage(this.image);
+        });
+    }
+
+    private void setInitialValues() {
+        this.deltaAlpha = 1.0;
+        this.phi = 270.0;
+        this.n = 180;
+        this.numberOfSteps = (int) (360 / deltaAlpha);
+        this.step = numberOfSteps;
+
+        alphaSlider.setValue(deltaAlpha);
+        phiSlider.setValue(phi);
+        nSlider.setValue(n);
+        stepSlider.setValue(step);
+
+        this.alphaSliderValue.setText(String.valueOf(deltaAlpha));
+        this.phiSliderValue.setText(String.valueOf(phi));
+        this.nSliderValue.setText(String.valueOf(n));
+        this.stepSliderValue.setText(String.valueOf(step));
+
+        this.image = new Image("imageSamples/" + imageChoice.getValue());
+        this.sinogram = new Sinogram(image, phi, n, deltaAlpha);
+        this.endImage = new InverseTransform((int) image.getWidth(), (int) image.getHeight(), sinogram, phi, n, deltaAlpha, numberOfSteps);
+
+        this.sample.setImage(image);
+        this.sinogramView.setImage(sinogram);
+        this.endView.setImage(endImage);
+    }
+
+    private MouseEvent generateEmptyMouseEvent() {
+        return new MouseEvent(MouseEvent.MOUSE_CLICKED,
+                0,
+                0,
+                0,
+                0,
+                MouseButton.PRIMARY,
+                1,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                true,
+                null);
     }
 }
